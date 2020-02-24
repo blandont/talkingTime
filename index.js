@@ -1,5 +1,16 @@
 // Blandon Tang
 // Server side code
+/**
+ * TODO: setup unique nickname validation on chatroom join on server side
+ * TODO: Scroll up text (starts from bottom)
+ * TODO: Chat log history displayed on user join
+ * TODO: Current user display
+ * TODO: Nickname change
+ * TODO: Nickname color change
+ * TODO: Bold Messages
+ * TODO: Cookies
+ * 
+ */
 
 const express = require('express');
 const app = express();

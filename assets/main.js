@@ -1,5 +1,8 @@
 // Blandon Tang
 // Client Side Code
+/**
+ *  TODO: Move the username generation to backend code
+ */
 
 const socket = io();
 var $loginForm = $('#login-form');
