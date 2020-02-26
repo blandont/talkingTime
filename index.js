@@ -3,12 +3,12 @@
 /**
  * TODO: setup unique nickname validation on chatroom join on server side
  * TODO: Scroll up text (starts from bottom)
- * TODO: Chat log history displayed on user join
+ * TODO: Chat log history displayed on user join - just needs timestamps
  * TODO: Current user display
  * TODO: Nickname change
  * TODO: Nickname color change
  * TODO: Bold Messages
- * TODO: Cookies - cookie-parser library
+ * TODO: Cookies - cookie-parser library or handle client side
  * 
  */
 
@@ -18,24 +18,25 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var moment = require('moment');
 var chance = require('chance').Chance();
-var cookieParser = require('cookie-parser');
+// var cookieParser = require('cookie-parser');
+
 // var connectedUsers = {}; // array of all connected user objects
 var connectedUsers = []; // array of all connected user objects
+var chatHistory = [];
 
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.static('assets'));
 
 // Whenever user makes get request to server
 app.get('/', function(req, res){
-	// res.cookie('name', 'hello'); //Sets name = express
+	// res.cookie('name', 'hello');
 	// console.log('Cookies: ', req.cookies)
     res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket) {
 	console.log('A user has connected with ID: ' + socket.id);
-	// var cookief =socket.handshake.headers.cookie;
-	// var cookies = cookie.parse(socket.handshake.headers.cookie);
+	// console.log('display chat history');
 	// console.log(cookies);
     // connectedUsers.push(socket.id);
     // console.log(connectedUsers);
@@ -53,6 +54,8 @@ io.on('connection', function(socket) {
 		}
 	});
 
+	// socket.emit('displayChatLog', {chatHistory});
+
 	socket.on('joinChat', function(req, callback) {
         let nameTaken = false;
 
@@ -61,7 +64,6 @@ io.on('connection', function(socket) {
         // connectedUsers[socket.id]['username'] = newUserName;
         // console.log(connectedUsers);
         // let username = chance.animal();
-        console.log(req.username + " has joined the chatroom");
         
 		Object.keys(connectedUsers).forEach(function(socketId) {
 		    if (connectedUsers[socketId].username.toLowerCase() === req.username.toLowerCase()) {
@@ -77,8 +79,11 @@ io.on('connection', function(socket) {
 			});
         }
         else {
+			console.log(req.username + " has joined the chatroom");
 		    connectedUsers[socket.id] = req;
-            socket.join(req.room);
+			socket.join(req.room);
+			// console.log("heres what you missed");
+			io.to(`${socket.id}`).emit('showChatLog', chatHistory); // emit only to new joinee
 			socket.broadcast.to(req.room).emit('message', {
 			    username: 'System',
 				text: req.username + ' has joined!',
@@ -90,15 +95,17 @@ io.on('connection', function(socket) {
 		}
 	});
 
-	socket.on('message', function(message) {
-		message.timestamp = moment().valueOf();
-		io.to(connectedUsers[socket.id].room).emit('message', message);
-	});
-
 	socket.emit('message', {
 		username: 'System',
 		text: 'Howdy, try out these commands: \n/nick - change your nickname\n/nickcolor - change nickname color',
 		timestamp: moment().valueOf()
+	});
+
+	socket.on('message', function(message) {
+		message.timestamp = moment().valueOf();
+		io.to(connectedUsers[socket.id].room).emit('message', message);
+		chatHistory.push({user:message.username, msg:message.text});
+		// console.log(chatHistory);
 	});
 
 });
