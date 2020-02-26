@@ -3,8 +3,7 @@
 /**
  * TODO: setup unique nickname validation on chatroom join on server side
  * TODO: Scroll up text (starts from bottom)
- * TODO: Chat log history displayed on user join - just needs timestamps
- * TODO: Current user display
+ * TODO: Current user display - show all (currently overwriting and shows only 1)
  * TODO: Nickname change
  * TODO: Nickname color change
  * TODO: Bold Messages
@@ -20,8 +19,8 @@ var moment = require('moment');
 var chance = require('chance').Chance();
 // var cookieParser = require('cookie-parser');
 
-// var connectedUsers = {}; // array of all connected user objects
-var connectedUsers = []; // array of all connected user objects
+var connectedUsers = {}; // object of all connected user objects
+// var connectedUsers = []; // array of all connected user objects
 var chatHistory = [];
 
 // app.use(cookieParser());
@@ -51,6 +50,7 @@ io.on('connection', function(socket) {
 				timestamp: moment().valueOf()
 			});
 			delete connectedUsers[socket.id];
+			// console.log(connectedUsers);
 		}
 	});
 
@@ -65,8 +65,8 @@ io.on('connection', function(socket) {
         // console.log(connectedUsers);
         // let username = chance.animal();
         
-		Object.keys(connectedUsers).forEach(function(socketId) {
-		    if (connectedUsers[socketId].username.toLowerCase() === req.username.toLowerCase()) {
+		Object.keys(connectedUsers).forEach(function(socketID) {
+		    if (connectedUsers[socketID].username.toLowerCase() === req.username.toLowerCase()) {
                 nameTaken = true;
             }
 		});
@@ -82,7 +82,9 @@ io.on('connection', function(socket) {
 			console.log(req.username + " has joined the chatroom");
 		    connectedUsers[socket.id] = req;
 			socket.join(req.room);
-			// console.log("heres what you missed");
+			// console.log(connectedUsers);
+			// console.log(chatHistory);
+			io.emit('usersPresent', connectedUsers);
 			io.to(`${socket.id}`).emit('showChatLog', chatHistory); // emit only to new joinee
 			socket.broadcast.to(req.room).emit('message', {
 			    username: 'System',
@@ -104,10 +106,9 @@ io.on('connection', function(socket) {
 	socket.on('message', function(message) {
 		message.timestamp = moment().valueOf();
 		io.to(connectedUsers[socket.id].room).emit('message', message);
-		chatHistory.push({user:message.username, msg:message.text});
+		chatHistory.push({user:message.username, msg:message.text, time:message.timestamp});
 		// console.log(chatHistory);
 	});
-
 });
 
 http.listen(3000, function() {

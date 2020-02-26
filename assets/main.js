@@ -2,6 +2,7 @@
 // Client Side Code
 /**
  *  TODO: Move the username generation to backend code
+ * https://socket.io/docs/emit-cheatsheet/
  */
 
 const socket = io();
@@ -54,12 +55,21 @@ socket.on('message', function(message) {
 });
 
 socket.on('showChatLog', function(chatHistory){
-	// console.log(chatHistory);
-	// TODO: Need original timestamp for the messages
+	console.log(chatHistory);
 	var $message = $('#messages');
 	chatHistory.forEach(function(message){
-		$message.append('<p><strong>' + message.user + '</strong> <span class="time">' + 'momentTimestamp.local().format("h:mma")' + '</span></p>');
+		var momentTimestamp = moment.utc(message.time);
+		$message.append('<p><strong>' + message.user + '</strong> <span class="time">' + momentTimestamp.local().format("h:mma") + '</span></p>'); //.format("h:mma")
 		$message.append('<div class="wrap-msg"><p>' + message.msg + '</p></div>');
+	});
+})
+
+socket.on('usersPresent', function(connectedUsers){
+	console.log(connectedUsers);
+	Object.keys(connectedUsers).forEach(function(socketID){
+		console.log(connectedUsers[socketID].username); // get all usernames present in chatroom
+		$('#connectedUsers').html("<p>" + connectedUsers[socketID].username + "</p>")
+		// currently overwriting users isntead of displaying all users
 	});
 })
 
