@@ -8,27 +8,35 @@
  * TODO: Nickname change
  * TODO: Nickname color change
  * TODO: Bold Messages
- * TODO: Cookies
+ * TODO: Cookies - cookie-parser library
  * 
  */
 
-const express = require('express');
-const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const moment = require('moment');
-const chance = require('chance').Chance();
+var express = require('express');
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+var moment = require('moment');
+var chance = require('chance').Chance();
+var cookieParser = require('cookie-parser');
 // var connectedUsers = {}; // array of all connected user objects
 var connectedUsers = []; // array of all connected user objects
 
+app.use(cookieParser());
 app.use(express.static('assets'));
 
+// Whenever user makes get request to server
 app.get('/', function(req, res){
+	// res.cookie('name', 'hello'); //Sets name = express
+	// console.log('Cookies: ', req.cookies)
     res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket) {
-    console.log('A user has connected with ID: ' + socket.id);
+	console.log('A user has connected with ID: ' + socket.id);
+	// var cookief =socket.handshake.headers.cookie;
+	// var cookies = cookie.parse(socket.handshake.headers.cookie);
+	// console.log(cookies);
     // connectedUsers.push(socket.id);
     // console.log(connectedUsers);
 

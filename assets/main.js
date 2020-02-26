@@ -14,8 +14,9 @@ let $username;
 
 socket.on('connect', function() {
     
-    $username = chance.animal({type: 'pet'}); // Assign user random animal for nickname
-    $room = 'chatroom';
+    $username = chance.animal(); // Assign user random animal for nickname
+	// $username = 'jim'
+	$room = 'chatroom';
 	socket.emit('joinChat', {
 	    username: $username,
         room: $room//,
@@ -26,8 +27,9 @@ socket.on('connect', function() {
 			$messageArea.show();
         }
         else {
-            alert(data.error);
-            // Location.reload();
+			alert(data.error);
+			// alert("reload soon")
+            Location.reload();
 		}
 	});
 });
