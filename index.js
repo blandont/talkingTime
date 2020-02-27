@@ -3,7 +3,6 @@
 /**
  * TODO: setup unique nickname validation on chatroom join on server side
  * TODO: Scroll up text (starts from bottom)
- * TODO: Current user display - show all (currently overwriting and shows only 1)
  * TODO: Nickname change
  * TODO: Nickname color change
  * TODO: Bold Messages
@@ -50,6 +49,7 @@ io.on('connection', function(socket) {
 				timestamp: moment().valueOf()
 			});
 			delete connectedUsers[socket.id];
+			io.emit('usersPresent', connectedUsers);
 			// console.log(connectedUsers);
 		}
 	});

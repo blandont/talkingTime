@@ -11,6 +11,7 @@ var $loginArea = $('#login-area');
 var $msgForm = $('#message-form');
 var $messageArea = $('#messages');
 let $username;
+// var userArray = [];
 
 
 socket.on('connect', function() {
@@ -55,7 +56,7 @@ socket.on('message', function(message) {
 });
 
 socket.on('showChatLog', function(chatHistory){
-	console.log(chatHistory);
+	// console.log(chatHistory);
 	var $message = $('#messages');
 	chatHistory.forEach(function(message){
 		var momentTimestamp = moment.utc(message.time);
@@ -66,11 +67,16 @@ socket.on('showChatLog', function(chatHistory){
 
 socket.on('usersPresent', function(connectedUsers){
 	console.log(connectedUsers);
+	let allUsers = "";
 	Object.keys(connectedUsers).forEach(function(socketID){
-		console.log(connectedUsers[socketID].username); // get all usernames present in chatroom
-		$('#connectedUsers').html("<p>" + connectedUsers[socketID].username + "</p>")
-		// currently overwriting users isntead of displaying all users
+		
+		// userArray.push({ID: socketID, nickname: connectedUsers[socketID].username})
+		// console.log(connectedUsers[socketID].username); // get all usernames present in chatroom
+		// console.log(userArray);
+		allUsers += "<p>" + connectedUsers[socketID].username + "</p>";
+		console.log(allUsers);
 	});
+	$('#connectedUsers').html(allUsers); // display all users
 })
 
 $msgForm.on('submit', function(e) {
