@@ -102,7 +102,7 @@ io.on('connection', function(socket) {
 		username: 'System',
 		text: 'Howdy, try out these commands: \n/nick - change your nickname\n/nickcolor - change nickname color',
 		timestamp: moment().valueOf(),
-		color: '#000000'
+		color: '#808080'
 	});
 
 	socket.on('message', function(message) {
@@ -131,7 +131,7 @@ io.on('connection', function(socket) {
 				rgbValue  = "#" + rgbValue;
 				// True if valid hex code
 				if (/^#[0-9A-F]{6}$/i.test(rgbValue)){
-					console.log('valid RGB value: ' + rgbValue);
+					// console.log('valid RGB value: ' + rgbValue);
 					connectedUsers[socket.id].color = rgbValue;
 					io.emit('usersPresent', connectedUsers);
 					// console.log(connectedUsers);

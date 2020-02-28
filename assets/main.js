@@ -52,8 +52,7 @@ socket.on('message', function(message) {
 	// console.log(usersOnline);
 	console.log("username color is: " + message.color);
 	let $message = $('#messages');
-	$message.append("<p style='color: "+ message.color +";'><strong>" + message.username + "</strong> <span class='time'>" + momentTimestamp.local().format('h:mma') + "</span></p>");
-	// $message.append('<p style="color: '+ message.color +';"><strong>' + message.username + '</strong> <span class="time">' + momentTimestamp.local().format("h:mma") + '</span></p>');
+	$message.append("<p><span style='color: "+ message.color +";'><strong>" + message.username + "</strong></span><span class='time'> " + momentTimestamp.local().format('h:mma') + "</span></p>");
 	$message.append('<div class="wrap-msg"><p>' + message.text + '</p></div>');
 	scrollSmoothToBottom('messages');
 });
@@ -76,7 +75,7 @@ socket.on('usersPresent', function(connectedUsers){
 		
 		// userArray.push({ID: socketID, nickname: connectedUsers[socketID].username})
 		// console.log(connectedUsers[socketID].username); // get all usernames present in chatroom
-		allUsers += "<p>" + connectedUsers[socketID].username + "</p>";
+		allUsers += "<p><span style='color: "+ connectedUsers[socketID].color +";'><strong>" + connectedUsers[socketID].username + "</strong></span></p>"; // change color of name in online list as well
 		// console.log(allUsers);
 	});
 	$('#connectedUsers').html(allUsers); // display all users
