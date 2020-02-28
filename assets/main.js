@@ -72,7 +72,8 @@ socket.on('showChatLog', function(chatHistory){
 socket.on('usersPresent', function(connectedUsers){
 	usersOnline = connectedUsers;
 	$username = usersOnline[socket.id].username;
-	console.log(connectedUsers);
+	$(".room-title").text('Welcome to the chatroom ' + $username + '!'); // change name display at top
+
 	let allUsers = "";
 	Object.keys(connectedUsers).forEach(function(socketID){
 		

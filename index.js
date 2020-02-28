@@ -17,7 +17,6 @@ var chance = require('chance').Chance();
 // var cookieParser = require('cookie-parser');
 
 var connectedUsers = {}; // object of all connected user objects
-// var connectedUsers = []; // array of all connected user objects
 var chatHistory = [];
 
 // app.use(cookieParser());
