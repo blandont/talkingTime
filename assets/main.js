@@ -2,7 +2,9 @@
 // Client Side Code
 /**
  *  TODO: Move the username generation to backend code
- * https://socket.io/docs/emit-cheatsheet/
+ * https://socket.io/docs/client-api/#socket-id -- socket io documentation
+ * https://socket.io/docs/emit-cheatsheet/  -- socket io cheatsheet
+ * https://stackabuse.com/git-merge-branch-into-master/ -- git branching cheatsheet
  */
 
 const socket = io();
@@ -69,6 +71,7 @@ socket.on('showChatLog', function(chatHistory){
 
 socket.on('usersPresent', function(connectedUsers){
 	usersOnline = connectedUsers;
+	$username = usersOnline[socket.id].username;
 	console.log(connectedUsers);
 	let allUsers = "";
 	Object.keys(connectedUsers).forEach(function(socketID){

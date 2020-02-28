@@ -3,9 +3,7 @@
 /**
  * TODO: setup unique nickname validation on chatroom join on server side
  * TODO: Scroll up text (starts from bottom) CSS change
- * TODO: Nickname change
- * TODO: Nickname color change
- * TODO: Bold Messages
+ * TODO: Bold Messages (sent by myself)
  * TODO: Cookies - (for disconnects and keeping nicknames)
  * 
  */
@@ -115,8 +113,39 @@ io.on('connection', function(socket) {
 
 		// User has indicated a nickname change
 		if ((message.text.charAt(0) ==='/') && (message.text.indexOf("nick ") == 1)){
-			console.log("change the nickname");
+			// console.log("change the nickname");
 			let userInput = message.text.split(' ');
+			if ((userInput.length != 2) || (userInput[1].length < 1) || (userInput[1].charAt(0) == ' ')) {
+				socket.emit('message', {
+					username: 'System',
+					text: 'Invalid format, please use: /nick new_nickname',
+					timestamp: moment().valueOf(),
+					color: '#808080'
+				});
+			}
+			else{
+				let newName = userInput[1];
+				console.log(newName);
+				let nameInUse = false;
+				Object.keys(connectedUsers).forEach(function(socketID) {
+					if (connectedUsers[socketID].username.toLowerCase() === newName.toLowerCase()) {
+						nameInUse = true;
+					}
+				});
+				if (nameInUse == false){
+					connectedUsers[socket.id].username = newName;
+					io.emit('usersPresent', connectedUsers);
+					// console.log(connectedUsers);
+				}
+				else{
+					socket.emit('message', {
+						username: 'System',
+						text: 'Sorry, the selected nickname is taken',
+						timestamp: moment().valueOf(),
+						color: '#808080'
+					});
+				}
+			}
 		}
 
 		// User has indicated a nickname color change
@@ -154,7 +183,13 @@ io.on('connection', function(socket) {
 
 		// Invalid slash command
 		else if (message.text.charAt(0) ==='/'){
-			console.log("Invalid / command");
+			// console.log("Invalid / command");
+			socket.emit('message', {
+				username: 'System',
+				text: 'Invalid slash command or invalid format',
+				timestamp: moment().valueOf(),
+				color: '#808080'
+			});
 		}
 
 	});
