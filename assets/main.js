@@ -19,7 +19,6 @@ var usersOnline = {};
 socket.on('connect', function() {
     
     $username = chance.animal(); // Assign user random animal for nickname
-	// $username = 'jim'
 	$room = 'chatroom';
 	// the following cookie code only handles one (most recent) cookie at a time
 	// document.cookie = "username=" + $username;
@@ -51,11 +50,18 @@ function scrollSmoothToBottom(id) {
 
 socket.on('message', function(message) {
 	let momentTimestamp = moment.utc(message.timestamp);
+	// console.log("on message: " + socket.id);
 	// console.log(usersOnline);
-	console.log("username color is: " + message.color);
+	// console.log("username color is: " + message.color);
 	let $message = $('#messages');
 	$message.append("<p><span style='color: "+ message.color +";'><strong>" + message.username + "</strong></span><span class='time'> " + momentTimestamp.local().format('h:mma') + "</span></p>");
-	$message.append('<div class="wrap-msg"><p>' + message.text + '</p></div>');
+	if (message.userID == socket.id){ // Message is sent by own client then do something to that msg (bold in this case)
+		$message.append('<div class="wrap-msg"><p><strong>' + message.text + '</strong></p></div>');
+		// TODO: Instead of bold I could move this to the opposite side of the chat and italicize?
+	}
+	else { // If message comes from other user
+		$message.append('<div class="wrap-msg"><p>' + message.text + '</p></div>');
+	}
 	scrollSmoothToBottom('messages');
 });
 
@@ -93,12 +99,13 @@ $msgForm.on('submit', function(e) {
 		alert('html tags are not allowed');
     }
     else {
-		console.log(socket.id);
-		console.log(usersOnline[socket.id].username);
+		// console.log(socket.id);
+		// console.log(usersOnline[socket.id].username);
 		socket.emit('message', {
 			username: $username.trim(),
 			text: $message.val(),
-			color: usersOnline[socket.id].color
+			color: usersOnline[socket.id].color,
+			userID: socket.id
 		});
 	}
 	$message.val('');

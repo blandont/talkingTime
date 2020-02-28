@@ -3,7 +3,6 @@
 /**
  * TODO: setup unique nickname validation on chatroom join on server side
  * TODO: Scroll up text (starts from bottom) CSS change
- * TODO: Bold Messages (sent by myself)
  * TODO: Cookies - (for disconnects and keeping nicknames)
  * 
  */
