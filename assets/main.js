@@ -11,7 +11,7 @@ var $loginArea = $('#login-area');
 var $msgForm = $('#message-form');
 var $messageArea = $('#messages');
 let $username;
-// var userArray = [];
+// var usersPresent = {};
 
 
 socket.on('connect', function() {
@@ -24,7 +24,8 @@ socket.on('connect', function() {
 	// console.log(document.cookie);
 	socket.emit('joinChat', {
 	    username: $username,
-        room: $room//,
+		room: $room,
+		color: '#000000'
         // age: 'yaoza'
 	}, function(data) {
 	    if (data.nameAvailable) {
@@ -47,9 +48,9 @@ function scrollSmoothToBottom(id) {
 }
 
 socket.on('message', function(message) {
-	var momentTimestamp = moment.utc(message.timestamp);
+	let momentTimestamp = moment.utc(message.timestamp);
 	// console.log(message.chatLog);
-	var $message = $('#messages');
+	let $message = $('#messages');
 	$message.append('<p><strong>' + message.username + '</strong> <span class="time">' + momentTimestamp.local().format("h:mma") + '</span></p>');
 	$message.append('<div class="wrap-msg"><p>' + message.text + '</p></div>');
 	scrollSmoothToBottom('messages');
@@ -72,9 +73,8 @@ socket.on('usersPresent', function(connectedUsers){
 		
 		// userArray.push({ID: socketID, nickname: connectedUsers[socketID].username})
 		// console.log(connectedUsers[socketID].username); // get all usernames present in chatroom
-		// console.log(userArray);
 		allUsers += "<p>" + connectedUsers[socketID].username + "</p>";
-		console.log(allUsers);
+		// console.log(allUsers);
 	});
 	$('#connectedUsers').html(allUsers); // display all users
 })

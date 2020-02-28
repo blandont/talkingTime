@@ -2,11 +2,11 @@
 // Server side code
 /**
  * TODO: setup unique nickname validation on chatroom join on server side
- * TODO: Scroll up text (starts from bottom)
+ * TODO: Scroll up text (starts from bottom) CSS change
  * TODO: Nickname change
  * TODO: Nickname color change
  * TODO: Bold Messages
- * TODO: Cookies - cookie-parser library or handle client side
+ * TODO: Cookies - (for disconnects and keeping nicknames)
  * 
  */
 
@@ -108,6 +108,46 @@ io.on('connection', function(socket) {
 		io.to(connectedUsers[socket.id].room).emit('message', message);
 		chatHistory.push({user:message.username, msg:message.text, time:message.timestamp});
 		// console.log(chatHistory);
+
+		// User has indicated a nickname change
+		if ((message.text.charAt(0) ==='/') && (message.text.indexOf("nick ") == 1)){
+			console.log("change the nickname");
+		}
+
+		// User has indicated a nickname color change
+		else if ((message.text.charAt(0) ==='/') && (message.text.indexOf("nickcolor ") == 1)){
+			let userInput = message.text.split(' ');
+			if ((userInput.length != 2) || (userInput[1].length != 6)){
+				socket.emit('message', {
+					username: 'System',
+					text: 'Invalid format, please use: /nickcolor RRGGBB',
+					timestamp: moment().valueOf()
+				});
+			}
+			else{
+				let rgbValue = userInput[1];
+				rgbValue  = "#" + rgbValue;
+				// True if valid hex code
+				if (/^#[0-9A-F]{6}$/i.test(rgbValue)){
+					console.log('valid RGB value: ' + rgbValue);
+					io.emit('change nickcolor', socket.username, rgbValue);
+				}
+				else{
+					socket.emit('message', {
+						username: 'System',
+						text: 'Please enter a valid hex color code',
+						timestamp: moment().valueOf()
+					});
+				}
+				
+			}
+		}
+		
+		// Invalid slash command
+		else if (message.text.charAt(0) ==='/'){
+			console.log("Invalid / command");
+		}
+
 	});
 });
 
