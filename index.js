@@ -46,7 +46,8 @@ io.on('connection', function(socket) {
 			io.to(userData.room).emit('message', {
 				username: 'System',
 				text: userData.username + ' has left the chat',
-				timestamp: moment().valueOf()
+				timestamp: moment().valueOf(),
+				color: '#808080'
 			});
 			delete connectedUsers[socket.id];
 			io.emit('usersPresent', connectedUsers);
@@ -90,7 +91,8 @@ io.on('connection', function(socket) {
 			socket.broadcast.to(req.room).emit('message', {
 			    username: 'System',
 				text: req.username + ' has joined!',
-				timestamp: moment().valueOf()
+				timestamp: moment().valueOf(),
+				color: '#808080'
 			});
 			callback({
 			    nameAvailable: true
@@ -114,6 +116,7 @@ io.on('connection', function(socket) {
 		// User has indicated a nickname change
 		if ((message.text.charAt(0) ==='/') && (message.text.indexOf("nick ") == 1)){
 			console.log("change the nickname");
+			let userInput = message.text.split(' ');
 		}
 
 		// User has indicated a nickname color change
@@ -123,7 +126,8 @@ io.on('connection', function(socket) {
 				socket.emit('message', {
 					username: 'System',
 					text: 'Invalid format, please use: /nickcolor RRGGBB',
-					timestamp: moment().valueOf()
+					timestamp: moment().valueOf(),
+					color: '#808080'
 				});
 			}
 			else{
@@ -140,7 +144,8 @@ io.on('connection', function(socket) {
 					socket.emit('message', {
 						username: 'System',
 						text: 'Please enter a valid hex color code',
-						timestamp: moment().valueOf()
+						timestamp: moment().valueOf(),
+						color: '#808080'
 					});
 				}
 				
