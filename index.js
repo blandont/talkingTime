@@ -12,25 +12,20 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var moment = require('moment');
 var chance = require('chance').Chance();
-// var cookieParser = require('cookie-parser');
 
 var connectedUsers = {}; // object of all connected user objects
 var chatHistory = [];
 
-// app.use(cookieParser());
 app.use(express.static('assets'));
 
 // Whenever user makes get request to server
 app.get('/', function(req, res){
-	// res.cookie('name', 'hello');
-	// console.log('Cookies: ', req.cookies)
     res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket) {
 	console.log('A user has connected with ID: ' + socket.id);
 	// console.log(connectedUsers);
-
 	// io.emit('usersPresent', connectedUsers);
 	
 	socket.on('disconnect', function() {
@@ -52,7 +47,6 @@ io.on('connection', function(socket) {
 	// socket.emit('displayChatLog', {chatHistory});
 
 	socket.on('joinChat', function(req, callback) {
-		let nameTaken = false;
 		req.username = chance.animal();
         // connectedUsers.push(socket.id);
         // connectedUsers[socket.id]['username'] = newUserName;
@@ -84,6 +78,7 @@ io.on('connection', function(socket) {
 		});
 	});
 
+	
 	socket.emit('message', {
 		username: 'System',
 		text: 'Howdy, try out these commands: \n/nick - change your nickname\n/nickcolor - change nickname color',
