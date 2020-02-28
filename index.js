@@ -3,6 +3,7 @@
 /**
  * TODO: setup unique nickname validation on chatroom join on server side
  * TODO: Scroll up text (starts from bottom) CSS change
+ * TODO: Bold Messages (sent by myself)
  * TODO: Cookies - (for disconnects and keeping nicknames)
  * 
  */
@@ -30,11 +31,10 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket) {
 	console.log('A user has connected with ID: ' + socket.id);
-	// console.log('display chat history');
-	// console.log(cookies);
-    // connectedUsers.push(socket.id);
-    // console.log(connectedUsers);
+	// console.log(connectedUsers);
 
+	// io.emit('usersPresent', connectedUsers);
+	
 	socket.on('disconnect', function() {
 		var userData = connectedUsers[socket.id];
 		if (typeof userData !== 'undefined') { // if element does not exist
@@ -46,7 +46,7 @@ io.on('connection', function(socket) {
 				color: '#808080'
 			});
 			delete connectedUsers[socket.id];
-			io.emit('usersPresent', connectedUsers);
+			io.emit('usersPresent', connectedUsers); // write clientside userlist
 			// console.log(connectedUsers);
 		}
 	});
@@ -54,46 +54,37 @@ io.on('connection', function(socket) {
 	// socket.emit('displayChatLog', {chatHistory});
 
 	socket.on('joinChat', function(req, callback) {
-        let nameTaken = false;
-
+		let nameTaken = false;
+		req.username = chance.animal();
+		console.log(req.username);
         // connectedUsers.push(socket.id);
-        // let newUserName = chance.animal();
         // connectedUsers[socket.id]['username'] = newUserName;
         // console.log(connectedUsers);
-        // let username = chance.animal();
-        
+		
+		// generate another name if taken
 		Object.keys(connectedUsers).forEach(function(socketID) {
-		    if (connectedUsers[socketID].username.toLowerCase() === req.username.toLowerCase()) {
-                nameTaken = true;
+			while (connectedUsers[socketID].username.toLowerCase() === req.username.toLowerCase()) {
+				req.username = chance.animal();
+				console.log("name taken, trying new name: " + req.username);
             }
 		});
+		
+		console.log(req.username + " has joined the chatroom");
+		connectedUsers[socket.id] = req;
+		connectedUsers[socket.id].userID = socket.id;
+		socket.join(req.room);
+		console.log(connectedUsers);
+		// console.log(chatHistory);
 
-		if (nameTaken) {
-		    callback({
-                // nameAvailable: true
-                nameAvailable: false,
-				error: 'Sorry this username is taken!'
-			});
-        }
-        else {
-			console.log(req.username + " has joined the chatroom");
-			connectedUsers[socket.id] = req;
-			connectedUsers[socket.id].userID = socket.id;
-			socket.join(req.room);
-			// console.log(connectedUsers);
-			// console.log(chatHistory);
-			io.emit('usersPresent', connectedUsers);
-			io.to(`${socket.id}`).emit('showChatLog', chatHistory); // emit only to new joinee
-			socket.broadcast.to(req.room).emit('message', {
-			    username: 'System',
-				text: req.username + ' has joined!',
-				timestamp: moment().valueOf(),
-				color: '#808080'
-			});
-			callback({
-			    nameAvailable: true
-			});
-		}
+		io.emit('usersPresent', connectedUsers); // send a data struct of all current users to client
+		io.to(`${socket.id}`).emit('showChatLog', chatHistory); // emit only to new joinee
+
+		socket.broadcast.to(req.room).emit('message', {
+			username: 'System',
+			text: req.username + ' has joined!',
+			timestamp: moment().valueOf(),
+			color: '#808080'
+		});
 	});
 
 	socket.emit('message', {

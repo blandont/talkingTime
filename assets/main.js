@@ -1,7 +1,6 @@
 // Blandon Tang
 // Client Side Code
 /**
- *  TODO: Move the username generation to backend code
  * https://socket.io/docs/client-api/#socket-id -- socket io documentation
  * https://socket.io/docs/emit-cheatsheet/  -- socket io cheatsheet
  * https://stackabuse.com/git-merge-branch-into-master/ -- git branching cheatsheet
@@ -13,31 +12,13 @@ var $loginArea = $('#login-area');
 var $msgForm = $('#message-form');
 var $messageArea = $('#messages');
 let $username;
-var usersOnline = {};
-
+var usersOnline = {}; // equivalent to connectedUsers in serverside
 
 socket.on('connect', function() {
-    
-    $username = chance.animal(); // Assign user random animal for nickname
-	$room = 'chatroom';
-	// the following cookie code only handles one (most recent) cookie at a time
-	// document.cookie = "username=" + $username;
-	// console.log(document.cookie);
-	socket.emit('joinChat', {
-	    username: $username,
-		room: $room,
+    socket.emit('joinChat', {
+	    username: 'newUserName',
+		room: 'chatroom',
 		color: '#000000' // default nickname color is black
-        // age: 'yaoza'
-	}, function(data) {
-	    if (data.nameAvailable) {
-		    $(".room-title").text('Welcome to the chatroom ' + $username + '!');
-			$messageArea.show();
-        }
-        else {
-			alert(data.error);
-			// alert("reload soon")
-            Location.reload();
-		}
 	});
 });
 
