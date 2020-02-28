@@ -1,9 +1,7 @@
 // Blandon Tang
 // Server side code
 /**
- * TODO: setup unique nickname validation on chatroom join on server side
  * TODO: Scroll up text (starts from bottom) CSS change
- * TODO: Bold Messages (sent by myself)
  * TODO: Cookies - (for disconnects and keeping nicknames)
  * 
  */
@@ -56,7 +54,6 @@ io.on('connection', function(socket) {
 	socket.on('joinChat', function(req, callback) {
 		let nameTaken = false;
 		req.username = chance.animal();
-		console.log(req.username);
         // connectedUsers.push(socket.id);
         // connectedUsers[socket.id]['username'] = newUserName;
         // console.log(connectedUsers);
@@ -73,7 +70,7 @@ io.on('connection', function(socket) {
 		connectedUsers[socket.id] = req;
 		connectedUsers[socket.id].userID = socket.id;
 		socket.join(req.room);
-		console.log(connectedUsers);
+		// console.log(connectedUsers);
 		// console.log(chatHistory);
 
 		io.emit('usersPresent', connectedUsers); // send a data struct of all current users to client

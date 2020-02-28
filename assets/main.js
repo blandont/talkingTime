@@ -22,13 +22,6 @@ socket.on('connect', function() {
 	});
 });
 
-function scrollSmoothToBottom(id) {
-	var div = document.getElementById(id);
-	$('#' + id).animate({
-		scrollTop: div.scrollHeight - div.clientHeight
-	}, 500);
-}
-
 socket.on('message', function(message) {
 	let momentTimestamp = moment.utc(message.timestamp);
 	// console.log("on message: " + socket.id);
@@ -91,3 +84,10 @@ $msgForm.on('submit', function(e) {
 	}
 	$message.val('');
 });
+
+function scrollSmoothToBottom(id) {
+	var div = document.getElementById(id);
+	$('#' + id).animate({
+		scrollTop: div.scrollHeight - div.clientHeight
+	}, 500);
+}
