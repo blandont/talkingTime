@@ -80,7 +80,8 @@ io.on('connection', function(socket) {
         }
         else {
 			console.log(req.username + " has joined the chatroom");
-		    connectedUsers[socket.id] = req;
+			connectedUsers[socket.id] = req;
+			connectedUsers[socket.id].userID = socket.id;
 			socket.join(req.room);
 			// console.log(connectedUsers);
 			// console.log(chatHistory);
@@ -100,7 +101,8 @@ io.on('connection', function(socket) {
 	socket.emit('message', {
 		username: 'System',
 		text: 'Howdy, try out these commands: \n/nick - change your nickname\n/nickcolor - change nickname color',
-		timestamp: moment().valueOf()
+		timestamp: moment().valueOf(),
+		color: '#000000'
 	});
 
 	socket.on('message', function(message) {
@@ -130,7 +132,9 @@ io.on('connection', function(socket) {
 				// True if valid hex code
 				if (/^#[0-9A-F]{6}$/i.test(rgbValue)){
 					console.log('valid RGB value: ' + rgbValue);
-					io.emit('change nickcolor', socket.username, rgbValue);
+					connectedUsers[socket.id].color = rgbValue;
+					io.emit('usersPresent', connectedUsers);
+					// console.log(connectedUsers);
 				}
 				else{
 					socket.emit('message', {
@@ -142,7 +146,7 @@ io.on('connection', function(socket) {
 				
 			}
 		}
-		
+
 		// Invalid slash command
 		else if (message.text.charAt(0) ==='/'){
 			console.log("Invalid / command");
