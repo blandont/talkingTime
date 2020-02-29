@@ -9,8 +9,8 @@
 const socket = io();
 var $loginForm = $('#login-form');
 var $loginArea = $('#login-area');
-var $msgForm = $('#message-form');
-var $messageArea = $('#messages');
+var $msgForm = $('#messageForm');
+var $messageArea = $('#messagesArea');
 let $username;
 var usersOnline = {}; // equivalent to connectedUsers in serverside
 
@@ -19,9 +19,9 @@ socket.on('connect', function() {
 	let fillerName = 'newUserName';
 	let hasCookie = false;
 	if (document.cookie.split(';').filter((item) => item.trim().startsWith('username=')).length) {
-		console.log('The cookie "username" exists')
+		// console.log('The cookie "username" exists')
 		fillerName = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-		console.log(fillerName);
+		// console.log(fillerName);
 		hasCookie = true;
 	}
     socket.emit('newUser', {
@@ -37,25 +37,48 @@ socket.on('message', function(message) {
 	// console.log("on message: " + socket.id);
 	// console.log(usersOnline);
 	// console.log("username color is: " + message.color);
-	let $message = $('#messages');
-	$message.append("<p><span style='color: "+ message.color +";'><strong>" + message.username + "</strong></span><span class='time'> " + momentTimestamp.local().format('h:mma') + "</span></p>");
-	if (message.userID == socket.id){ // Message is sent by own client then do something to that msg (bold in this case)
-		$message.append('<div class="wrap-msg"><p><strong>' + message.text + '</strong></p></div>');
-		// TODO: Instead of bold I could move this to the opposite side of the chat and italicize?
+	let $message = $('#messagesArea');
+	
+	// Message is sent by own client 
+	if (message.userID == socket.id){
+		$message.append('<div class="msg right-msg"><div class="msg-bubble">' +
+							'<div class="msg-info">' +
+								'<div class="msg-info-name" style="color: '+ message.color +' !important;">' + message.username + '</div>' +
+								'<div class="msg-info-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
+							'</div>' +
+							'<div class="msg-text">' +
+								message.text +
+							'</div>' +
+						'</div></div>');
 	}
 	else { // If message comes from other user
-		$message.append('<div class="wrap-msg"><p>' + message.text + '</p></div>');
+		$message.append('<div class="msg left-msg"><div class="msg-bubble">' +
+							'<div class="msg-info">' +
+								'<div class="msg-info-name" style="color: '+ message.color +' !important;">' + message.username + '</div>' +
+								'<div class="msg-info-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
+							'</div>' +
+							'<div class="msg-text">' +
+								message.text +
+							'</div>' +
+						'</div></div>');
 	}
-	scrollSmoothToBottom('messages');
+	scrollSmoothToBottom('messagesArea');
 });
 
 socket.on('showChatLog', function(chatHistory){
 	// console.log(chatHistory);
-	var $message = $('#messages');
+	var $message = $('#messagesArea');
 	chatHistory.forEach(function(message){
 		var momentTimestamp = moment.utc(message.time);
-		$message.append('<p><strong>' + message.user + '</strong> <span class="time">' + momentTimestamp.local().format("h:mma") + '</span></p>'); //.format("h:mma")
-		$message.append('<div class="wrap-msg"><p>' + message.msg + '</p></div>');
+		$message.append('<div class="msg left-msg"><div class="msg-bubble">' +
+		'<div class="msg-info">' +
+			'<div class="msg-info-name">' + message.user + '</div>' +
+			'<div class="msg-info-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
+		'</div>' +
+		'<div class="msg-text">' +
+			message.msg +
+		'</div>' +
+	'</div></div>');
 	});
 })
 
@@ -64,7 +87,7 @@ socket.on('usersPresent', function(connectedUsers){
 	$username = usersOnline[socket.id].username;
 	document.cookie = "username=" + $username; //set cookie in case of nickname change
 	// console.log(document.cookie);
-	$(".room-title").text('Welcome to the chatroom ' + $username + '!'); // change name display at top
+	$(".roomTitle").text('Welcome to the chatroom ' + $username + '!'); // change name display at top
 
 	let allUsers = "";
 	Object.keys(connectedUsers).forEach(function(socketID){

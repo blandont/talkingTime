@@ -14,36 +14,38 @@
   </head>
 
 	<body>
-	<div class="container">
-		<div class="row" id="message-area">
-			<!-- <div class="large-8 columns small-centered"> -->
-				<h2>Chatroom</h2>
-				
-        		<div class="chat-wrap">
-					<div class="top">
-						<h5 class="room-title"></h5>
-            		</div>
-					<div id="messages">
-            		</div>
-            
-					<form id="message-form" action="" autocomplete="off">
-						<div class="input-group">
-							<input type="text" placeholder="Type message here" class="input-group-field" id="messageInput">
-							<div class="input-group-button">
-								<input type="submit" value="Send">
-							</div>
-						</div>
-					</form>
-				</div>	
-			<!-- </div> -->
-    	</div>
-      
-		<div>
-			<p>Blandon Tang</p>
+	
+	<section class="messenger">
+		<header class="headerBar">
+			<div>
+				<h5 class="roomTitle"></h5>
+			</div>
+		</header>
+		
+		<main id="messagesArea"> <!-- multiple br is a quick hack to start at bottom-->
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		</main>
+		
+		<form id="messageForm" action="" autocomplete="off">
+			<input id="messageInput" type="text" placeholder="Type message here..."></input>
+			<input type="submit" class="msgSendBtn" value="Send"></input>
+		</form>
+
+		<!-- Online Users Section-->
+		<!-- <div>
+			<p>Made by Blandon Tang</p>
 			<div id='connectedUsers'>
 			</div>
+		</div> -->
+	</section>
+	
+	<!-- Online Users Section-->
+	<section>
+		<p>Made by Blandon Tang</p>
+		<div id='connectedUsers'>
 		</div>
-    </div>
+	</section>
     
 	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
@@ -51,11 +53,7 @@
    	<script src="http://chancejs.com/chance.js"></script>
 	<script src="/main.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="/js/foundation.min.js"></script>
-    <script type="text/javascript">
-    	$(document).foundation()
-    </script> -->
-
+    
 	</body>
 </html>
 
