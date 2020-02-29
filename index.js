@@ -2,7 +2,6 @@
 // Server side code
 /**
  * TODO: Scroll up text (starts from bottom) CSS change
- * TODO: Cookies - (for disconnects and keeping nicknames)
  * 
  */
 
@@ -47,7 +46,11 @@ io.on('connection', function(socket) {
 	// socket.emit('displayChatLog', {chatHistory});
 
 	socket.on('joinChat', function(req, callback) {
-		req.username = chance.animal();
+		let nameTaken = false;
+		// req.username = chance.animal();
+		if (req.cookie == false){
+			req.username = chance.animal(); // generate new name if no cookie
+		}
         // connectedUsers.push(socket.id);
         // connectedUsers[socket.id]['username'] = newUserName;
         // console.log(connectedUsers);
@@ -106,7 +109,6 @@ io.on('connection', function(socket) {
 			}
 			else{
 				let newName = userInput[1];
-				console.log(newName);
 				let nameInUse = false;
 				Object.keys(connectedUsers).forEach(function(socketID) {
 					if (connectedUsers[socketID].username.toLowerCase() === newName.toLowerCase()) {
@@ -115,6 +117,7 @@ io.on('connection', function(socket) {
 				});
 				if (nameInUse == false){
 					connectedUsers[socket.id].username = newName;
+					console.log("Name changed to: " + newName);
 					io.emit('usersPresent', connectedUsers);
 					// console.log(connectedUsers);
 				}

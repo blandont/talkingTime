@@ -15,10 +15,20 @@ let $username;
 var usersOnline = {}; // equivalent to connectedUsers in serverside
 
 socket.on('connect', function() {
+	// check if cookie is present
+	let fillerName = 'newUserName';
+	let hasCookie = false;
+	if (document.cookie.split(';').filter((item) => item.trim().startsWith('username=')).length) {
+		console.log('The cookie "username" exists')
+		fillerName = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+		console.log(fillerName);
+		hasCookie = true;
+	}
     socket.emit('joinChat', {
-	    username: 'newUserName',
+	    username: fillerName,
 		room: 'chatroom',
-		color: '#000000' // default nickname color is black
+		color: '#000000', // default nickname color is black
+		cookie: hasCookie
 	});
 });
 
@@ -52,6 +62,8 @@ socket.on('showChatLog', function(chatHistory){
 socket.on('usersPresent', function(connectedUsers){
 	usersOnline = connectedUsers;
 	$username = usersOnline[socket.id].username;
+	document.cookie = "username=" + $username; //set cookie in case of nickname change
+	// console.log(document.cookie);
 	$(".room-title").text('Welcome to the chatroom ' + $username + '!'); // change name display at top
 
 	let allUsers = "";
