@@ -41,10 +41,10 @@ socket.on('message', function(message) {
 	
 	// Message is sent by own client 
 	if (message.userID == socket.id){
-		$message.append('<div class="msg right-msg"><div class="msg-bubble">' +
-							'<div class="msg-info">' +
-								'<div class="msg-info-name" style="color: '+ message.color +' !important;">' + message.username + '</div>' +
-								'<div class="msg-info-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
+		$message.append('<div class="msg right-msg"><div class="msgBubble">' +
+							'<div class="msgInfo">' +
+								'<div class="msgInfo-name" style="color: '+ message.color +' !important;">' + message.username + '</div>' +
+								'<div class="msgInfo-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
 							'</div>' +
 							'<div class="msg-text">' +
 								message.text +
@@ -52,17 +52,17 @@ socket.on('message', function(message) {
 						'</div></div>');
 	}
 	else { // If message comes from other user
-		$message.append('<div class="msg left-msg"><div class="msg-bubble">' +
-							'<div class="msg-info">' +
-								'<div class="msg-info-name" style="color: '+ message.color +' !important;">' + message.username + '</div>' +
-								'<div class="msg-info-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
+		$message.append('<div class="msg left-msg"><div class="msgBubble">' +
+							'<div class="msgInfo">' +
+								'<div class="msgInfo-name" style="color: '+ message.color +' !important;">' + message.username + '</div>' +
+								'<div class="msgInfo-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
 							'</div>' +
 							'<div class="msg-text">' +
 								message.text +
 							'</div>' +
 						'</div></div>');
 	}
-	scrollSmoothToBottom('messagesArea');
+	scrollToBottom('messagesArea');
 });
 
 socket.on('showChatLog', function(chatHistory){
@@ -70,16 +70,17 @@ socket.on('showChatLog', function(chatHistory){
 	var $message = $('#messagesArea');
 	chatHistory.forEach(function(message){
 		var momentTimestamp = moment.utc(message.time);
-		$message.append('<div class="msg left-msg"><div class="msg-bubble">' +
-		'<div class="msg-info">' +
-			'<div class="msg-info-name">' + message.user + '</div>' +
-			'<div class="msg-info-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
+		$message.append('<div class="msg left-msg"><div class="msgBubble">' +
+		'<div class="msgInfo">' +
+			'<div class="msgInfo-name">' + message.user + '</div>' +
+			'<div class="msgInfo-time">' + momentTimestamp.local().format('h:mma') + '</div>' +
 		'</div>' +
 		'<div class="msg-text">' +
 			message.msg +
 		'</div>' +
 	'</div></div>');
 	});
+	scrollToBottom('messagesArea');
 })
 
 socket.on('usersPresent', function(connectedUsers){
@@ -120,9 +121,9 @@ $msgForm.on('submit', function(e) {
 	$message.val('');
 });
 
-function scrollSmoothToBottom(id) {
-	var div = document.getElementById(id);
+function scrollToBottom(id) {
+	let section = document.getElementById(id);
 	$('#' + id).animate({
-		scrollTop: div.scrollHeight - div.clientHeight
+		scrollTop: section.scrollHeight - section.clientHeight
 	}, 500);
 }
