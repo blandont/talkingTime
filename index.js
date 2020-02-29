@@ -2,8 +2,6 @@
 // Server side code
 /**
  * TODO: Scroll up text (starts from bottom) CSS change
- * TODO: Cookies don't work fully with disconnects (user 1 joins, u2 joins, u1 leaves and reconnects)
- *  Works when U1 joins, U2 Joins, U2 leaves, U1 leaves and U1 rejoins
  */
 
 var express = require('express');
