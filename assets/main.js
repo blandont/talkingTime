@@ -95,7 +95,7 @@ socket.on('usersPresent', function(connectedUsers){
 		
 		// userArray.push({ID: socketID, nickname: connectedUsers[socketID].username})
 		// console.log(connectedUsers[socketID].username); // get all usernames present in chatroom
-		allUsers += "<p><span style='color: "+ connectedUsers[socketID].color +";'><strong>" + connectedUsers[socketID].username + "</strong></span></p>"; // change color of name in online list as well
+		allUsers += "<div class='userDisplay'><span style='color: "+ connectedUsers[socketID].color +";'><strong>" + connectedUsers[socketID].username + "</strong></span></div>"; // change color of name in online list as well
 		// console.log(allUsers);
 	});
 	$('#connectedUsers').html(allUsers); // display all users

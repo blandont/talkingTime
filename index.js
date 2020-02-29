@@ -31,7 +31,7 @@ io.on('connection', function(socket) {
 		if (typeof userData !== 'undefined') { // if element does not exist
 			socket.leave(connectedUsers[socket.id]);
 			io.to(userData.room).emit('message', {
-				username: '🤖 System',
+				username: 'System',
 				text: userData.username + ' has left the chat',
 				timestamp: moment().valueOf(),
 				color: '#808080'
@@ -73,7 +73,7 @@ io.on('connection', function(socket) {
 		io.to(`${socket.id}`).emit('showChatLog', chatHistory); // emit only to new joinee
 
 		socket.broadcast.to(req.room).emit('message', {
-			username: '🤖 System',
+			username: 'System',
 			text: req.username + ' has joined!',
 			timestamp: moment().valueOf(),
 			color: '#808080'
@@ -82,7 +82,7 @@ io.on('connection', function(socket) {
 
 	
 	socket.emit('message', {
-		username: '🤖 System',
+		username: 'System',
 		text: 'Stay awhile and listen <br><i>/nick</i> - change your nickname<br><i>/nickcolor</i> - change nickname color',
 		timestamp: moment().valueOf(),
 		color: '#808080'
@@ -100,7 +100,7 @@ io.on('connection', function(socket) {
 			let userInput = message.text.split(' ');
 			if ((userInput.length != 2) || (userInput[1].length < 1) || (userInput[1].charAt(0) == ' ')) {
 				socket.emit('message', {
-					username: '🤖 System',
+					username: 'System',
 					text: 'Invalid format, please use: /nick new_nickname',
 					timestamp: moment().valueOf(),
 					color: '#808080'
@@ -122,7 +122,7 @@ io.on('connection', function(socket) {
 				}
 				else{
 					socket.emit('message', {
-						username: '🤖 System',
+						username: 'System',
 						text: 'Sorry, the selected nickname is taken',
 						timestamp: moment().valueOf(),
 						color: '#808080'
@@ -136,7 +136,7 @@ io.on('connection', function(socket) {
 			let userInput = message.text.split(' ');
 			if ((userInput.length != 2) || (userInput[1].length != 6)){
 				socket.emit('message', {
-					username: '🤖 System',
+					username: 'System',
 					text: 'Invalid format, please use: /nickcolor RRGGBB',
 					timestamp: moment().valueOf(),
 					color: '#808080'
@@ -154,7 +154,7 @@ io.on('connection', function(socket) {
 				}
 				else{
 					socket.emit('message', {
-						username: '🤖 System',
+						username: 'System',
 						text: 'Please enter a valid hex color code',
 						timestamp: moment().valueOf(),
 						color: '#808080'
@@ -168,7 +168,7 @@ io.on('connection', function(socket) {
 		else if (message.text.charAt(0) ==='/'){
 			// console.log("Invalid / command");
 			socket.emit('message', {
-				username: '🤖 System',
+				username: 'System',
 				text: 'Invalid slash command or invalid format',
 				timestamp: moment().valueOf(),
 				color: '#808080'

@@ -8,6 +8,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Pattaya" rel="stylesheet">
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/chatroom.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Exo+2&display=swap" rel="stylesheet">
 
 
     <!-- <link rel="stylesheet" href="/chatroom.css"> -->
@@ -32,19 +33,15 @@
 			<input id="messageInput" type="text" placeholder="Type message here..."></input>
 			<input type="submit" class="msgSendBtn" value="Send"></input>
 		</form>
-
-		<!-- Online Users Section-->
-		<!-- <div>
-			<p>Made by Blandon Tang</p>
-			<div id='connectedUsers'>
-			</div>
-		</div> -->
 	</section>
 	
 	<!-- Online Users Section-->
 	<section class="activeUserDisplay">
-		<div>Online Users: </div>
-		<div id='connectedUsers'>
+		<header class="headerBar">
+			<h5>Online Users</h5>
+		</header>
+		<div id='usersContainer'>
+			<div id='connectedUsers'></div>
 		</div>
 	</section>
     
