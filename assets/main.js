@@ -24,7 +24,7 @@ socket.on('connect', function() {
 		console.log(fillerName);
 		hasCookie = true;
 	}
-    socket.emit('joinChat', {
+    socket.emit('newUser', {
 	    username: fillerName,
 		room: 'chatroom',
 		color: '#000000', // default nickname color is black

@@ -44,7 +44,7 @@ io.on('connection', function(socket) {
 
 	// socket.emit('displayChatLog', {chatHistory});
 
-	socket.on('joinChat', function(req, callback) {
+	socket.on('newUser', function(req, callback) {
 		let nameTaken = false;
 		// req.username = chance.animal();
 		if (req.cookie == false){
