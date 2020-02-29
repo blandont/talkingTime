@@ -1,4 +1,5 @@
 // Blandon Tang
+// 10126829 W2020 SENG513
 // Client Side Code
 /**
  * https://socket.io/docs/client-api/#socket-id -- socket io documentation
