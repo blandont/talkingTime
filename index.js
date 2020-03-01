@@ -107,6 +107,14 @@ io.on('connection', function(socket) {
 					color: '#808080'
 				});
 			}
+			else if (userInput[1].toLowerCase() === 'system'){
+				socket.emit('message', {
+					username: 'System',
+					text: 'Sorry, that name cannot be selected',
+					timestamp: moment().valueOf(),
+					color: '#808080'
+				});
+			}
 			else{
 				let newName = userInput[1];
 				let nameInUse = false;

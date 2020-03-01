@@ -39,9 +39,14 @@ socket.on('message', function(message) {
 	// console.log(usersOnline);
 	// console.log("username color is: " + message.color);
 	let $message = $('#messagesArea');
-	
+
+	// If Message is a system message
+	if ((message.userID === undefined) &&(message.username.toLowerCase() == 'system')){
+		$message.append('<div class="sysMsg"><div><span>' + message.username + ' </span><span>' + momentTimestamp.local().format('h:mma') +'</span></div>' +
+						'<div>' + message.text + '</div></div>');
+	}
 	// Message is sent by own client 
-	if (message.userID == socket.id){
+	else if (message.userID == socket.id){
 		$message.append('<div class="msg right-msg"><div class="msgBubble">' +
 							'<div class="msgInfo">' +
 								'<div class="msgInfo-name" style="color: '+ message.color +' !important;">' + message.username + '</div>' +
@@ -52,7 +57,8 @@ socket.on('message', function(message) {
 							'</div>' +
 						'</div></div>');
 	}
-	else { // If message comes from other user
+	// If message comes from other user
+	else {
 		$message.append('<div class="msg left-msg"><div class="msgBubble">' +
 							'<div class="msgInfo">' +
 								'<div class="msgInfo-name" style="color: '+ message.color +' !important;">' + message.username + '</div>' +
@@ -89,17 +95,15 @@ socket.on('usersPresent', function(connectedUsers){
 	$username = usersOnline[socket.id].username;
 	document.cookie = "username=" + $username; //set cookie in case of nickname change
 	// console.log(document.cookie);
-	$(".roomTitle").text('Welcome to the chatroom ' + $username + '!'); // change name display at top
+	$(".roomTitle").text('Welcome to the chatroom, ' + $username + '!'); // change name display at top
 
 	let allUsers = "";
 	Object.keys(connectedUsers).forEach(function(socketID){
-		
-		// userArray.push({ID: socketID, nickname: connectedUsers[socketID].username})
 		// console.log(connectedUsers[socketID].username); // get all usernames present in chatroom
 		allUsers += "<div class='userDisplay'><span style='color: "+ connectedUsers[socketID].color +";'><strong>" + connectedUsers[socketID].username + "</strong></span></div>"; // change color of name in online list as well
 		// console.log(allUsers);
 	});
-	$('#connectedUsers').html(allUsers); // display all users
+	$('#usersContainer').html(allUsers); // display all users
 })
 
 $msgForm.on('submit', function(e) {
@@ -126,5 +130,5 @@ function scrollToBottom(id) {
 	let section = document.getElementById(id);
 	$('#' + id).animate({
 		scrollTop: section.scrollHeight - section.clientHeight
-	}, 500);
+	}, 450);
 }
